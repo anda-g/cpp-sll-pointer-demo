@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <conio.h>
+#include <unistd.h>
+
 using namespace std;
 
 /**
@@ -56,8 +58,9 @@ struct NodeType *CreateList(struct NodeType *plist, int n) {
     p = GetNode();
     p->info = item;
     p->next = nullptr;
+    plist = p;
     ptr = plist;
-    for (int i = 2; i <= n; ++i) {
+    for (i = 2; i <= n; i++) {
         cout << "[+] Enter Item : ";
         cin >> item;
         p = GetNode();
@@ -76,6 +79,7 @@ void Traverse(struct NodeType *plist) {
         cout << ptr->info << " ";
         ptr = ptr->next;
     }
+    cout << endl;
 }
 
 int CountNode(struct NodeType *plist) {
@@ -108,7 +112,7 @@ void Sort(struct NodeType *plist) {
     struct NodeType *p, *ptr, temp;
     for (p = plist; p != nullptr; p = p->next) {
         for (ptr = p->next; ptr != nullptr; ptr = ptr->next) {
-            if (p->info < ptr->info) {
+            if (p->info > ptr->info) {
                 temp.info = p->info;
                 p->info = ptr->info;
                 ptr->info = temp.info;
@@ -124,6 +128,7 @@ void SearchNode(struct NodeType *plist) {
     p = plist;
     cout << "[+] Enter Item : ";
     cin >> item;
+    cout << "[*] Item : ";
     while (p != nullptr) {
         if (p->info == item) {
             found = 1;
@@ -134,6 +139,7 @@ void SearchNode(struct NodeType *plist) {
     if (found == 0) {
         cout << "Not found";
     }
+    cout << endl;
 }
 
 struct NodeType *DelNode(struct NodeType *plist, char item) {
@@ -183,6 +189,7 @@ struct NodeType *InsertNode(struct NodeType *plist, char item) {
         cout << "3. Positon after NodePTR" << endl;
         do {
             cout << "[+] Choose [B, E, A] or Q to Quite: "; ch = getch();
+            cout << endl;
             switch (ch) {
                 case 'B':
                 case 'b': {
@@ -234,7 +241,107 @@ struct NodeType *InsertNode(struct NodeType *plist, char item) {
     return plist;
 }
 
-int main() {
+int ProgramMenu() {
+    int choice = 0;
+    cout << "===< Singly Linked List >====" << endl;
+    cout << "1. Create List" << endl;
+    cout << "2. Traverse" << endl;
+    cout << "3. Search Node" << endl;
+    cout << "4. Delete Node" << endl;
+    cout << "5. Insert Node" << endl;
+    cout << "6. Sort Node" << endl;
+    cout << "7. Exit" << endl;
+    cout << "[+] Enter Choice : "; cin >> choice;
+    return choice;
+}
 
-    return 0;
+int ProgramExit() {
+    system("cls");
+    const int timeSleep = 900000;
+    for (int i = 0; i < sizeof(TEAM_MEMBERS)/sizeof(string); i++) {
+        cout << TEAM_MEMBERS[i] << endl;
+        usleep(timeSleep);
+    }
+    cout << "Program Exit! Bye bye ";
+    for (int i = 0; i< 3; i++) {
+        cout << ".";
+        usleep(timeSleep);
+    }
+    exit(0);
+}
+int main() {
+    struct NodeType *plist = nullptr;
+    Initialize(plist);
+    int numberOfNodes = 0;
+    do {
+        numberOfNodes = CountNode(plist);
+        switch (ProgramMenu()) {
+            case 1: {
+                int n;
+                cout << "[+] Enter number of items : "; cin >> n;
+                if (n>0) {
+                    plist = CreateList(plist, n);
+                    cout << GREEN << "[+] List Created" << RESET << endl;
+                }else {
+                    cout << RED <<  "[!] Invalid Input" << RESET << endl;
+                }
+                break;
+            }
+            case 2: {
+                if (numberOfNodes == 0) {
+                    cout << YELLOW << "[!] The List Is Empty" << RESET << endl;
+                }else {
+                    cout << "[*] List Item : ";
+                    Traverse(plist);
+                }
+                break;
+            }
+            case 3: {
+                if (numberOfNodes == 0) {
+                    cout << YELLOW << "[!] The List Is Empty" << RESET << endl;
+                }else {
+                    SearchNode(plist);
+                }
+                break;
+            }
+            case 4: {
+                if (numberOfNodes == 0) {
+                    cout << YELLOW << "[!] The List Is Empty" << RESET << endl;
+                }else {
+                    char item;
+                    cout << "[+] Enter Item : "; cin >> item;
+                    plist = DelNode(plist,item);
+                }
+                break;
+            }
+            case 5: {
+                if (numberOfNodes == 0) {
+                    cout << YELLOW << "[!] The List Is Empty" << RESET << endl;
+                }else {
+                    char item;
+                    cout << "[+] Enter Item : "; cin >> item;
+                    plist = InsertNode(plist, item);
+                }
+                break;
+            }
+            case 6: {
+                if (numberOfNodes == 0) {
+                    cout << YELLOW << "[!] The List Is Empty" << RESET << endl;
+                }else {
+                    Sort(plist);
+                }
+                break;
+            }
+
+            case 7: {
+                ProgramExit();
+            }
+            default: {
+                cout << RED << "[!] Invalid Choice" << RESET << endl;
+            }
+        }
+        cout << "[+] Any key to continue..."; getch();
+        system("cls");
+
+    }while (true);
 }
