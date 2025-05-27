@@ -3,6 +3,32 @@
 #include <conio.h>
 using namespace std;
 
+/**
+ *  Royals University of Phnom Penh
+ *  Department: IT
+ *  Major: Computer Science
+ *  Second Year Generation 27
+ *  Team members:
+ *  <li>
+ *      Me
+ *  </li>
+ *
+ */
+const string TEAM_MEMBERS[] = {
+    "Sareach Putbormey",
+    "Lem Ansoleaphea",
+    "Kung Sovannda",
+    "Piseth Oudom",
+    "Hiem Sreynit",
+    "Soeng Yanut"
+};
+
+const string RESET  = "\033[0m";
+const string RED    = "\033[31m";
+const string GREEN  = "\033[32m";
+const string YELLOW = "\033[33m";
+const string BLUE   = "\033[34m";
+
 struct NodeType {
     char info;
     struct NodeType *next;
