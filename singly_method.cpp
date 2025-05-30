@@ -2,6 +2,7 @@
 #include <iostream>
 #include <conio.h>
 #include <unistd.h>
+#include <fstream>
 
 using namespace std;
 
@@ -36,6 +37,22 @@ struct NodeType {
     struct NodeType *next;
 };
 
+void writeToFile(struct NodeType *plist) {
+    fstream file;
+    file.open("char-list.bin", ios::binary|ios::out);
+    if (!file) {
+        cout << RED << "[!] Error opening file for writing." << RESET << endl;
+    }
+    struct NodeType *p = plist;
+    while (p != NULL) {
+        file.write((char*)&p->info, sizeof(char));
+        p = p->next;
+    }
+    file.close();
+}
+
+
+
 void Initialize(struct NodeType *plist) {
     plist = nullptr;
 }
@@ -43,6 +60,31 @@ void Initialize(struct NodeType *plist) {
 struct NodeType *GetNode() {
     struct NodeType *p = (struct NodeType *) malloc(sizeof(struct NodeType));
     return p;
+}
+
+struct NodeType *readFromFile() {
+    fstream file;
+    file.open("char-list.bin", ios::binary|ios::in);
+    if (!file) {
+        cout << RED << "[!] Error opening file for reading." << RESET << endl;
+    }
+    char info;
+    struct NodeType *p, *ptr, *plist;
+    file.read((char*)&info, sizeof(char));
+    p = GetNode();
+    p->info = info;
+    p->next = nullptr;
+    plist = p;
+    ptr = plist;
+    while (file.read((char*)&info, sizeof(char))) {
+        p = GetNode();
+        p->info = info;
+        p->next = nullptr;
+        ptr->next = p;
+        ptr = p;
+
+    }
+    return plist;
 }
 
 void FreeNode(struct NodeType *p) {
@@ -103,9 +145,7 @@ struct NodeType *SearchPos(struct NodeType *plist, char item) {
             p = p->next;
         }
     }
-    if (p == nullptr) {
-        return nullptr;
-    }
+    return nullptr;
 }
 
 void Sort(struct NodeType *plist) {
@@ -251,7 +291,7 @@ int ProgramMenu() {
     cout << "5. Insert Node" << endl;
     cout << "6. Sort Node" << endl;
     cout << "7. Exit" << endl;
-    cout << "[+] Enter Choice : "; cin >> choice;
+    cout << "[+] Enter Choice : "; cin >> choice;cin.ignore();
     return choice;
 }
 
@@ -274,6 +314,7 @@ int main() {
     Initialize(plist);
     int numberOfNodes = 0;
     do {
+        plist = readFromFile();
         numberOfNodes = CountNode(plist);
         switch (ProgramMenu()) {
             case 1: {
@@ -340,6 +381,7 @@ int main() {
                 cout << RED << "[!] Invalid Choice" << RESET << endl;
             }
         }
+        writeToFile(plist);
         cout << "[+] Any key to continue..."; getch();
         system("cls");
 
