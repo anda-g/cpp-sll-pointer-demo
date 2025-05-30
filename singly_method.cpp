@@ -7,16 +7,25 @@
 using namespace std;
 
 /**
- *  Royals University of Phnom Penh
- *  Department: IT
- *  Major: Computer Science
- *  Second Year Generation 27
- *  Team members:
- *  <li>
- *      Me
- *  </li>
+ *  Royal University of Phnom Penh
+ *  Department of Information Technology
+ *  Major: Computer Science (Year 2, Generation 27)
  *
+ *  Homework: Linked List with Pointer
+ *
+ *  Team Members:
+ *    - Sareach Putbormey
+ *    - Lem Ansoleaphea
+ *    - Kung Sovannda
+ *    - Piseth Oudom
+ *    - Hiem Sreynit
+ *    - Soeng Yanut
+ *
+ *  © 2025 Royal University of Phnom Penh. All rights reserved.
  */
+
+
+
 const string TEAM_MEMBERS[] = {
     "Sareach Putbormey",
     "Lem Ansoleaphea",
@@ -25,6 +34,8 @@ const string TEAM_MEMBERS[] = {
     "Hiem Sreynit",
     "Soeng Yanut"
 };
+
+const string FILE_NAME = "char-linked-list.bin";
 
 const string RESET  = "\033[0m";
 const string RED    = "\033[31m";
@@ -37,24 +48,8 @@ struct NodeType {
     struct NodeType *next;
 };
 
-void writeToFile(struct NodeType *plist) {
-    fstream file;
-    file.open("char-list.bin", ios::binary|ios::out);
-    if (!file) {
-        cout << RED << "[!] Error opening file for writing." << RESET << endl;
-    }
-    struct NodeType *p = plist;
-    while (p != NULL) {
-        file.write((char*)&p->info, sizeof(char));
-        p = p->next;
-    }
-    file.close();
-}
-
-
-
 void Initialize(struct NodeType *plist) {
-    plist = nullptr;
+    plist = NULL;
 }
 
 struct NodeType *GetNode() {
@@ -62,30 +57,7 @@ struct NodeType *GetNode() {
     return p;
 }
 
-struct NodeType *readFromFile() {
-    fstream file;
-    file.open("char-list.bin", ios::binary|ios::in);
-    if (!file) {
-        cout << RED << "[!] Error opening file for reading." << RESET << endl;
-    }
-    char info;
-    struct NodeType *p, *ptr, *plist;
-    file.read((char*)&info, sizeof(char));
-    p = GetNode();
-    p->info = info;
-    p->next = nullptr;
-    plist = p;
-    ptr = plist;
-    while (file.read((char*)&info, sizeof(char))) {
-        p = GetNode();
-        p->info = info;
-        p->next = nullptr;
-        ptr->next = p;
-        ptr = p;
 
-    }
-    return plist;
-}
 
 void FreeNode(struct NodeType *p) {
     free(p);
@@ -99,7 +71,7 @@ struct NodeType *CreateList(struct NodeType *plist, int n) {
     cin >> item;
     p = GetNode();
     p->info = item;
-    p->next = nullptr;
+    p->next = NULL;
     plist = p;
     ptr = plist;
     for (i = 2; i <= n; i++) {
@@ -107,7 +79,7 @@ struct NodeType *CreateList(struct NodeType *plist, int n) {
         cin >> item;
         p = GetNode();
         p->info = item;
-        p->next = nullptr;
+        p->next = NULL;
         ptr->next = p;
         ptr = p;
     }
@@ -117,7 +89,7 @@ struct NodeType *CreateList(struct NodeType *plist, int n) {
 void Traverse(struct NodeType *plist) {
     struct NodeType *ptr;
     ptr = plist;
-    while (ptr != nullptr) {
+    while (ptr != NULL) {
         cout << ptr->info << " ";
         ptr = ptr->next;
     }
@@ -128,7 +100,7 @@ int CountNode(struct NodeType *plist) {
     struct NodeType *p;
     int num = 0;
     p = plist;
-    while (p != nullptr) {
+    while (p != NULL) {
         num++;
         p = p->next;
     }
@@ -138,20 +110,20 @@ int CountNode(struct NodeType *plist) {
 struct NodeType *SearchPos(struct NodeType *plist, char item) {
     struct NodeType *p;
     p = plist;
-    while (p != nullptr) {
+    while (p != NULL) {
         if (p->info == item) {
             return (p);
         } else {
             p = p->next;
         }
     }
-    return nullptr;
+    return NULL;
 }
 
 void Sort(struct NodeType *plist) {
     struct NodeType *p, *ptr, temp;
-    for (p = plist; p != nullptr; p = p->next) {
-        for (ptr = p->next; ptr != nullptr; ptr = ptr->next) {
+    for (p = plist; p != NULL; p = p->next) {
+        for (ptr = p->next; ptr != NULL; ptr = ptr->next) {
             if (p->info > ptr->info) {
                 temp.info = p->info;
                 p->info = ptr->info;
@@ -169,7 +141,7 @@ void SearchNode(struct NodeType *plist) {
     cout << "[+] Enter Item : ";
     cin >> item;
     cout << "[*] Item : ";
-    while (p != nullptr) {
+    while (p != NULL) {
         if (p->info == item) {
             found = 1;
             cout << p->info;
@@ -185,17 +157,17 @@ void SearchNode(struct NodeType *plist) {
 struct NodeType *DelNode(struct NodeType *plist, char item) {
     struct NodeType *p, *p1, *p2, *p3, *ptr;
     p = SearchPos(plist, item);
-    if (p != nullptr) {
+    if (p != NULL) {
         if (p == plist) {
             cout << "Delete at the beginning NodeP1" << endl;
             p1 = p;
             plist = p1->next;
             FreeNode(p);
-        } else if (p->next == nullptr) {
+        } else if (p->next == NULL) {
             cout << "Delete NodeP2 at position end" << endl;
             p2 = p;
             ptr = plist;
-            while (ptr->next != nullptr) {
+            while (ptr->next != NULL) {
                 ptr = ptr->next;
             }
             ptr->next = p2->next;
@@ -204,7 +176,7 @@ struct NodeType *DelNode(struct NodeType *plist, char item) {
             cout << "Delete NodeP3 at position after NodePTR" << endl;
             p3 = p;
             ptr = plist;
-            while (ptr->next != nullptr) {
+            while (ptr->next != NULL) {
                 ptr = ptr->next;
             }
             ptr->next = p3->next;
@@ -220,8 +192,8 @@ struct NodeType *InsertNode(struct NodeType *plist, char item) {
     int count, i, pos;
     p = GetNode();
     p->info = item;
-    p->next = nullptr;
-    if (plist == nullptr) {
+    p->next = NULL;
+    if (plist == NULL) {
         plist = p;
     }else {
         cout << "1. Beginning" << endl;
@@ -242,7 +214,7 @@ struct NodeType *InsertNode(struct NodeType *plist, char item) {
                 case 'e': {
                     cout << "Insert at end of NodeP2" << endl;
                     ptr = plist;
-                    while (ptr->next != nullptr) {
+                    while (ptr->next != NULL) {
                         ptr = ptr->next;
                     }
                     ptr->next = p;
@@ -281,6 +253,45 @@ struct NodeType *InsertNode(struct NodeType *plist, char item) {
     return plist;
 }
 
+void writeToFile(struct NodeType *plist) {
+    fstream file;
+    file.open(FILE_NAME, ios::binary|ios::out);
+    if (!file) {
+        cout << RED << "[!] Error opening file for writing." << RESET << endl;
+    }
+    struct NodeType *p = plist;
+    while (p != NULL) {
+        file.write((char*)&p->info, sizeof(char));
+        p = p->next;
+    }
+    file.close();
+}
+
+struct NodeType *readFromFile() {
+    fstream file;
+    file.open(FILE_NAME, ios::binary|ios::in);
+    if (!file) {
+        cout << RED << "[!] Error opening file for reading." << RESET << endl;
+    }
+    char info;
+    struct NodeType *p, *ptr, *plist;
+    file.read((char*)&info, sizeof(char));
+    p = GetNode();
+    p->info = info;
+    p->next = NULL;
+    plist = p;
+    ptr = plist;
+    while (file.read((char*)&info, sizeof(char))) {
+        p = GetNode();
+        p->info = info;
+        p->next = NULL;
+        ptr->next = p;
+        ptr = p;
+
+    }
+    return plist;
+}
+
 int ProgramMenu() {
     int choice = 0;
     cout << "===< Singly Linked List >====" << endl;
@@ -291,7 +302,7 @@ int ProgramMenu() {
     cout << "5. Insert Node" << endl;
     cout << "6. Sort Node" << endl;
     cout << "7. Exit" << endl;
-    cout << "[+] Enter Choice : "; cin >> choice;cin.ignore();
+    cout << "[+] Enter Choice : ";cin >> choice;
     return choice;
 }
 
@@ -310,11 +321,11 @@ int ProgramExit() {
     exit(0);
 }
 int main() {
-    struct NodeType *plist = nullptr;
+    struct NodeType *plist = NULL;
     Initialize(plist);
     int numberOfNodes = 0;
+    plist = readFromFile();
     do {
-        plist = readFromFile();
         numberOfNodes = CountNode(plist);
         switch (ProgramMenu()) {
             case 1: {
@@ -376,9 +387,12 @@ int main() {
 
             case 7: {
                 ProgramExit();
+                return 0;
             }
             default: {
                 cout << RED << "[!] Invalid Choice" << RESET << endl;
+                cin.clear();
+                cin.ignore();
             }
         }
         writeToFile(plist);
